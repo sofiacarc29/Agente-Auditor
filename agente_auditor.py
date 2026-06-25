@@ -11,7 +11,7 @@ import json
 import os
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -32,8 +32,6 @@ class ResultadoAuditoria:
     estado_transaccion: str
     indice_fidelidad: float
     diagnostico: str
-    detalle_reglas: list[str] = field(default_factory=list)
-    analisis_semantico: Optional[str] = None
 
 
 def cargar_json(ruta: str) -> dict | list:
@@ -242,6 +240,7 @@ def determinar_estado(hallazgos: list[str], indice: float, reglas: dict) -> str:
 
 
 def auditar_caso(caso: dict, reglas: dict, usar_gemini: bool = True) -> ResultadoAuditoria:
+    """Ejecuta la auditoría completa de un caso individual."""
     hallazgos, puntaje_reglas = validar_caso_reglas(caso, reglas)
 
     puntaje_semantico = 0.5
@@ -251,7 +250,7 @@ def auditar_caso(caso: dict, reglas: dict, usar_gemini: bool = True) -> Resultad
         try:
             puntaje_semantico, analisis_semantico = analizar_con_gemini(caso)
         except Exception as e:
-            print(f"  [FALLBACK] Gemini no disponible ({type(e).__name__}: {e}). Usando TF-IDF.")
+            print(f"  [FALLBACK] Gemini no disponible ({type(e).__name__}). Usando TF-IDF.")
             puntaje_semantico, analisis_semantico = analizar_con_tfidf(caso)
     else:
         puntaje_semantico, analisis_semantico = analizar_con_tfidf(caso)
@@ -259,6 +258,7 @@ def auditar_caso(caso: dict, reglas: dict, usar_gemini: bool = True) -> Resultad
     indice = calcular_indice_fidelidad(puntaje_reglas, puntaje_semantico)
     estado = determinar_estado(hallazgos, indice, reglas)
 
+    # Construir diagnóstico conciso
     diagnostico_partes = list(hallazgos)
     if analisis_semantico:
         diagnostico_partes.append(f"Análisis semántico: {analisis_semantico}")
@@ -268,12 +268,11 @@ def auditar_caso(caso: dict, reglas: dict, usar_gemini: bool = True) -> Resultad
         estado_transaccion=estado,
         indice_fidelidad=indice,
         diagnostico=" | ".join(diagnostico_partes),
-        detalle_reglas=hallazgos,
-        analisis_semantico=analisis_semantico,
     )
 
 
 def imprimir_resultado(resultado: ResultadoAuditoria) -> str:
+    """Genera la salida en el formato exacto requerido por el reto."""
     return "\n".join([
         f"Caso [{resultado.id_caso}]: {resultado.estado_transaccion}",
         f"- Índice de Fidelidad Analítica: {resultado.indice_fidelidad:.4f}",
@@ -281,96 +280,39 @@ def imprimir_resultado(resultado: ResultadoAuditoria) -> str:
     ])
 
 
-def generar_reporte_completo(resultados: list[ResultadoAuditoria]) -> str:
-    separador = "=" * 80
-    lineas = [
-        separador,
-        "  REPORTE DE AUDITORÍA - AGENTE AUDITOR (Agent A)",
-        "  Segunda Línea de Defensa - AI Governance",
-        separador,
-        "",
-    ]
-
-    for resultado in resultados:
-        lineas.append(imprimir_resultado(resultado))
-        lineas.append("")
-        if resultado.detalle_reglas:
-            lineas.append("  Detalle de controles aplicados:")
-            for detalle in resultado.detalle_reglas:
-                lineas.append(f"    - {detalle}")
-            lineas.append("")
-        if resultado.analisis_semantico:
-            lineas.append(f"  Análisis semántico: {resultado.analisis_semantico}")
-            lineas.append("")
-        lineas.extend(["-" * 80, ""])
-
-    total = len(resultados)
-    conformes = sum(
-        1 for r in resultados
-        if "Conforme" in r.estado_transaccion or "Correctamente" in r.estado_transaccion
-    )
-    violaciones = total - conformes
-    indice_promedio = sum(r.indice_fidelidad for r in resultados) / total if total else 0
-    riesgo = "ALTO" if violaciones > total / 2 else "MEDIO" if violaciones > 0 else "BAJO"
-
-    lineas.extend([
-        separador,
-        "  RESUMEN EJECUTIVO",
-        separador,
-        f"  Total de casos auditados: {total}",
-        f"  Casos conformes: {conformes}",
-        f"  Casos con violaciones: {violaciones}",
-        f"  Índice de Fidelidad Promedio: {indice_promedio:.4f}",
-        f"  Nivel de riesgo del agente: {riesgo}",
-        separador,
-    ])
-
-    return "\n".join(lineas)
-
-
 def main():
+    """Función principal del Agente Auditor."""
     print("\nIniciando Agente Auditor (Agent A)...\n")
 
     try:
         reglas = cargar_reglas()
-        print("[OK] Configuración de reglas cargada.")
     except FileNotFoundError as e:
         print(f"[ERROR] {e}")
         sys.exit(1)
 
     try:
         casos = cargar_casos()
-        print(f"[OK] Dataset cargado: {len(casos)} casos para auditar.")
     except (FileNotFoundError, ValueError) as e:
         print(f"[ERROR] {e}")
         sys.exit(1)
 
     usar_gemini = bool(os.getenv("GEMINI_API_KEY"))
-    if usar_gemini:
-        print("[OK] Gemini API configurada.")
-    else:
-        print("[AVISO] Gemini API no configurada. Usando fallback TF-IDF.")
 
-    print(f"\n{'=' * 80}\n  Procesando casos...\n{'=' * 80}\n")
-
+    # Auditar cada caso y generar salida en formato exacto
     resultados = []
     for caso in casos:
-        print(f"  Auditando caso {caso['id_caso']}...")
         resultado = auditar_caso(caso, reglas, usar_gemini=usar_gemini)
         resultados.append(resultado)
-        print(f"    -> {resultado.estado_transaccion} (Fidelidad: {resultado.indice_fidelidad:.4f})")
 
-    print("\n")
-    reporte = generar_reporte_completo(resultados)
-    print(reporte)
+    # Salida en consola con el formato exacto requerido
+    print("")
+    for resultado in resultados:
+        print(imprimir_resultado(resultado))
+        print("")
 
+    # Guardar resultados en JSON (se actualiza en cada ejecución)
     ruta_salida = Path("resultados")
     ruta_salida.mkdir(exist_ok=True)
-
-    archivo_reporte = ruta_salida / "reporte_auditoria.txt"
-    archivo_reporte.write_text(reporte, encoding="utf-8")
-    print(f"\nReporte guardado en: {archivo_reporte}")
-
     archivo_json = ruta_salida / "resultados_auditoria.json"
     resultados_json = [
         {
@@ -378,13 +320,10 @@ def main():
             "estado_transaccion": r.estado_transaccion,
             "indice_fidelidad": r.indice_fidelidad,
             "diagnostico": r.diagnostico,
-            "detalle_reglas": r.detalle_reglas,
-            "analisis_semantico": r.analisis_semantico,
         }
         for r in resultados
     ]
     archivo_json.write_text(json.dumps(resultados_json, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Resultados JSON guardados en: {archivo_json}")
 
 
 if __name__ == "__main__":
