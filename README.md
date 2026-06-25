@@ -62,32 +62,6 @@ Este repositorio implementa el prototipo de un **Agente Auditor (Agent A)** que 
 | Deducibles | Valida mención del deducible aplicable | Baja |
 | Coherencia semántica | Mide alineación entre contexto normativo y acción | Media |
 
-## Instalación
-
-```bash
-# Clonar repositorio
-git clone https://github.com/sofiacarc29/Agente-Auditor.git
-cd Agente-Auditor
-
-# Crear entorno virtual
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/Mac
-
-# Instalar dependencias
-pip install -r requirements.txt
-```
-
-### Configurar API Key (opcional)
-
-El agente funciona con o sin API key de Gemini. Sin ella, usa TF-IDF como fallback.
-
-```bash
-# Crear archivo .env en la raíz del proyecto
-echo GEMINI_API_KEY=tu_api_key_aqui > .env
-```
-
-Para obtener una API key gratuita: [Google AI Studio](https://aistudio.google.com/apikey)
 
 ## Ejecución
 
