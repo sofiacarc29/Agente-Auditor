@@ -1,0 +1,53 @@
+{
+  "umbrales": {
+    "cobertura_maxima_cristales_usd": 1200,
+    "deducible_cristales_porcentaje": 10,
+    "limite_emision_automatica_vida_mayores_60_usd": 80000,
+    "edad_limite_emision_automatica": 60,
+    "max_siniestros_30_dias_sospecha": 3
+  },
+  "alertas_criticas": [
+    "ALERTA_LISTA_RESTRICTIVA",
+    "SARLAFT",
+    "AML",
+    "lavado de activos",
+    "financiación del terrorismo",
+    "bloquear de inmediato",
+    "lista restrictiva"
+  ],
+  "palabras_clave_bloqueo": [
+    "bloquear",
+    "suspender",
+    "rechazar",
+    "denegar",
+    "no procesar",
+    "cuenta bajo sospecha"
+  ],
+  "palabras_clave_aprobacion": [
+    "aprobado",
+    "emitida",
+    "procedemos",
+    "cobertura",
+    "exitoso",
+    "buenas noticias"
+  ],
+  "palabras_clave_escalamiento": [
+    "analista",
+    "contactará",
+    "no puedo procesar",
+    "automáticamente"
+  ],
+  "pesos_validacion": {
+    "cumplimiento_monto": 0.30,
+    "cumplimiento_restricciones": 0.35,
+    "coherencia_accion": 0.20,
+    "seguridad_aml": 0.15
+  },
+  "estados_transaccion": {
+    "aprobado": "APROBADA - Conforme",
+    "rechazado_correctamente": "RECHAZADA - Correctamente escalada",
+    "violacion_limite": "BLOQUEADA - Violación de límite de cobertura",
+    "violacion_aml": "BLOQUEADA URGENTE - Violación de controles AML/SARLAFT",
+    "requiere_revision": "EN REVISIÓN - Requiere validación manual"
+  }
+}
