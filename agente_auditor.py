@@ -188,7 +188,7 @@ Responde EXACTAMENTE en este formato JSON (sin bloques de codigo):
             {"role": "system", "content": "Responde unicamente en formato JSON valido."},
             {"role": "user", "content": prompt},
         ],
-        temperature=0.1,
+        temperature=0.2,
     )
 
     texto_respuesta = response.choices[0].message.content.strip()
