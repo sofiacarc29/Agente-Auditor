@@ -25,8 +25,8 @@ Este repositorio implementa el prototipo de un **Agente Auditor (Agent A)** que 
 │  │  CAPA 1: Reglas        │   │  CAPA 2: Análisis          │ │
 │  │  Deterministas         │   │  Semántico                 │ │
 │  │                        │   │                            │ │
-│  │  • Montos vs límites   │   │  Principal: Google Gemini  │ │
-│  │  • Alertas AML/SARLAFT │   │  Fallback:  TF-IDF +      │ │
+│  │  • Montos vs límites   │   │  Principal: Open AI        │ │
+│  │  • Alertas AML/SARLAFT │   │  Fallback:  TF-IDF +       │ │
 │  │  • Restricciones edad  │   │             Cosine         │ │
 │  │  • Cuentas sospechosas │   │             Similarity     │ │
 │  │  • Deducibles          │   │                            │ │
@@ -135,7 +135,7 @@ Métrica compuesta que cuantifica qué tan alineada está la decisión de Agent 
 | Tecnología | Versión | Uso |
 |-----------|---------|-----|
 | Python | 3.12+ | Runtime principal |
-| Google Gemini AI | 2.0 Flash | Análisis semántico (capa principal) |
+| Open AI | llama-3.3-70b-versatile | Análisis semántico (capa principal) |
 | scikit-learn | 1.7+ | TF-IDF + Cosine Similarity (fallback) |
 | python-dotenv | 1.1+ | Gestión segura de variables de entorno |
 
