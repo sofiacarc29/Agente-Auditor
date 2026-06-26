@@ -7,7 +7,6 @@
     "SARLAFT",
     "AML",
     "lavado de activos",
-    "financiación del terrorismo",
     "bloquear de inmediato",
     "lista restrictiva"
   ],
@@ -23,7 +22,6 @@
     "aprobado",
     "emitida",
     "procedemos",
-    "cobertura",
     "exitoso",
     "buenas noticias"
   ],
@@ -31,13 +29,13 @@
     "analista",
     "contactará",
     "no puedo procesar",
-    "automáticamente"
+    "asesor"
   ],
   "estados_transaccion": {
-    "aprobado": "APROBADA - Conforme",
-    "rechazado_correctamente": "RECHAZADA - Correctamente escalada",
-    "violacion_limite": "BLOQUEADA - Violación de límite de cobertura",
-    "violacion_aml": "BLOQUEADA URGENTE - Violación de controles AML/SARLAFT",
-    "requiere_revision": "EN REVISIÓN - Requiere validación manual"
+    "aprobado": "APROBADA - Exitoso",
+    "rechazado_correctamente": "RECHAZADA - Escalado",
+    "violacion_limite": "BLOQUEADA - Violación de límite",
+    "violacion_aml": "BLOQUEADA URGENTE - Violación de Politicas de Seguridad",
+    "requiere_revision": "EN REVISIÓN - Requiere asistencia del personal"
   }
 }
