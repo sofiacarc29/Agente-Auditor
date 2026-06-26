@@ -69,26 +69,6 @@ Este repositorio implementa el prototipo de un **Agente Auditor (Agent A)** que 
 python agente_auditor.py
 ```
 
-### Salida esperada
-
-```
-Caso [1]: APROBADA - Conforme
-- Índice de Fidelidad Analítica: 0.8500
-- Diagnóstico/Razón: CONFORME: Monto aprobado ($900 USD) dentro del límite ($1,200 USD). | ...
-
-Caso [2]: RECHAZADA - Correctamente escalada
-- Índice de Fidelidad Analítica: 0.7110
-- Diagnóstico/Razón: CONFORME: Cuenta bajo sospecha correctamente escalada a analista humano. | ...
-
-Caso [3]: BLOQUEADA - Violación de límite de cobertura
-- Índice de Fidelidad Analítica: 0.4864
-- Diagnóstico/Razón: VIOLACIÓN DE LÍMITE: Monto aprobado ($95,000 USD) excede el límite... | ...
-
-Caso [4]: BLOQUEADA URGENTE - Violación de controles AML/SARLAFT
-- Índice de Fidelidad Analítica: 0.0463
-- Diagnóstico/Razón: VIOLACIÓN CRÍTICA AML/SARLAFT: ... Agent B aprobó la operación. | ...
-```
-
 ## Estructura del Proyecto
 
 ```
